@@ -12,6 +12,10 @@ def _get_doc_from_file(value):
         return json.load(file)[value]
 
 
+def usage() -> str:
+    return _get_doc_from_file("usage")
+
+
 def help_message() -> str:
     return _get_doc_from_file("help")
 

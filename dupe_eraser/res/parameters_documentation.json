@@ -1,4 +1,6 @@
 {
+    "usage": "dupe_eraser [options]",
+
     "help": "Give a help list and short usage message.",
     "version": "Print software version.",
 
