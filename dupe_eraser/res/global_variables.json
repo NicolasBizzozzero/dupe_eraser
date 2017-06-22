@@ -1,0 +1,29 @@
+{
+  "name": "dupe_eraser",
+  "description": "Command-line tools to automate the deletion of duplicates files.",
+  "keywords": "",
+  "main_homepage": "",
+  "download_url":"",
+  "version": "0.0.1",
+  "author": "Bizzozzéro Nicolas",
+  "maintainer": "Bizzozzéro Nicolas",
+  "email": "nicolasbizzozzero@gmail.com",
+  "status": "Alpha",
+  "copyright": "Copyright 2017, Bizzozzéro Nicolas",
+  "credits": [
+    "Bizzozzéro Nicolas"
+  ],
+  "license": "GPL-3.0",
+  "classifiers": [
+        "Development Status :: 3 - Alpha",
+        "Natural Language :: English",
+        "Intended Audience :: Science/Research",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Programming Language :: Python :: 3.5"
+  ],
+  "dependencies": [
+  ],
+
+  "main_entry_point": "dupe_eraser"
+}

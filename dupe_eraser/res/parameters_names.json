@@ -1,0 +1,13 @@
+{
+    "help": "-h -? --help",
+    "version": "-V --version",
+
+    "recursive": "-r --recursive",
+
+    "safe": "-s --safe",
+    "safe_directory": "-S --safe-directory",
+    "check": "-c --check",
+
+    "verbosity": "-v --verbosity",
+    "low_memory": "-m --low-memory"
+}
