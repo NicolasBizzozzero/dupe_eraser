@@ -1,26 +1,28 @@
 {
   "name": "dupe_eraser",
   "description": "Command-line tools to automate the deletion of duplicates files.",
-  "keywords": "",
-  "main_homepage": "",
-  "download_url":"",
+  "keywords": "Deletion, duplicate, files",
+  "main_homepage": "https://github.com/NicolasBi/dupe_eraser",
+  "download_url":"https://github.com/NicolasBi/dupe_eraser/tarball/master",
   "version": "1.0.0",
   "author": "Bizzozzéro Nicolas",
   "maintainer": "Bizzozzéro Nicolas",
   "email": "nicolasbizzozzero@gmail.com",
-  "status": "Alpha",
+  "status": "Stable",
   "copyright": "Copyright 2017, Bizzozzéro Nicolas",
   "credits": [
     "Bizzozzéro Nicolas"
   ],
   "license": "GPL-3.0",
   "classifiers": [
-        "Development Status :: 3 - Alpha",
-        "Natural Language :: English",
-        "Intended Audience :: Science/Research",
-        "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Programming Language :: Python :: 3.5"
+      "Development Status :: 5 - Production/Stable",
+      "Environment :: Console",
+      "Intended Audience :: End Users/Desktop",
+      "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+      "Natural Language :: English",
+      "Programming Language :: Python :: 3.5",
+      "Programming Language :: Python :: Implementation :: CPython",
+      "Topic :: Desktop Environment :: File Managers"
   ],
   "dependencies": [
       "docopt >= 0.6.2",
