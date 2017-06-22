@@ -6,3 +6,4 @@ safe_directory = None
 check = None
 verbosity = None
 low_memory = None
+hashing_algorithm = None

@@ -1,6 +1,7 @@
 import dupe_eraser.src.getters.get_parameter_name as gpn
 from dupe_eraser.src.getters.get_output_message import string_to_verbosity
 import dupe_eraser.src.getters.environment as env
+from dupe_eraser.src.core.hashing_algorithms import check_hashing_algorithm_supported
 
 
 class CheckAndSafeOptionsActivated(Exception):

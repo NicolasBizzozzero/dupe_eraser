@@ -31,5 +31,5 @@ class HashingAlgorithm(Enum):
 
 def check_hashing_algorithm_supported(algorithm: str) -> None:
     algorithm = algorithm.lower()
-    if algorithm not in HashingAlgorithm:
+    if not HashingAlgorithm(algorithm):
         raise HashingAlgorithmNotSupported(algorithm)

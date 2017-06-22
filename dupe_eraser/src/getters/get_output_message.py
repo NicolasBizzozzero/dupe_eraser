@@ -44,6 +44,7 @@ class Message(Enum):
     # Normal messages
     DELETING_FILE = "deleting_file"
     MOVING_FILE = "moving_file"
+    CHECKING_FILE = "checking_file"
 
 
 def _is_a_normal_message(message_key: str) -> bool:
@@ -61,7 +62,7 @@ def _get_message_from_file(value):
         return json.load(file)[value]
 
 
-def vprint(message: Message) -> None:
+def vprint(message: Message, *args, **kwargs) -> None:
     message_key = message.value
 
     if env.verbosity == Verbosity.QUIET:
@@ -76,7 +77,7 @@ def vprint(message: Message) -> None:
     else:
         raise UnknownVerbosity(env.verbosity)
 
-    print(message, end="", sep="")
+    print(message.format(*kwargs), end="", sep="")
 
 
 if __name__ == '__main__':

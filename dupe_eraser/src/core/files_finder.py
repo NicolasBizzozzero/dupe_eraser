@@ -1,21 +1,38 @@
 from dupe_eraser.src.core.files_eraser import remove_doublons
-from dupe_eraser.src.core.hashing_algorithms import check_hashing_algorithm_supported
+from dupe_eraser.src.getters.get_output_message import vprint, Message
 from path import Path
+from typing import List
 
 
-def erase_doublons(*, main_directory: Path, hashing_algorithm: str):
-    files_to_examine = [file for file in main_directory.walkfiles()]
+def erase_doublons(*, main_directory: Path, hashing_algorithm: str, recursive: bool, safe_mode: bool, check_mode: bool,
+                   safe_directory: Path) -> None:
+    if recursive:
+        files_to_examine = [file for file in main_directory.walkfiles()]
+    else:
+        files_to_examine = [file for file in main_directory.files()]
+
     while files_to_examine:
         file = files_to_examine.pop(0)
-        files_to_examine = find_doublons(file, files_to_examine)
+        vprint(Message.EXAMINING_FILE, file=file.realpath())
+        files_to_examine = _find_doublons(original_file=file,
+                                          other_files=files_to_examine,
+                                          hashing_algorithm=hashing_algorithm,
+                                          safe_mode=safe_mode,
+                                          check_mode=check_mode,
+                                          safe_directory=safe_directory)
 
 
-def find_doublons(file, list_files):
-    file_hash = file.read_hexhash(HASHING_ALGORITHM)
+def _find_doublons(original_file: Path, other_files: List[Path], hashing_algorithm: str, safe_mode: bool,
+                   check_mode: bool, safe_directory: Path) -> List[Path]:
+    file_hash = original_file.read_hexhash(hashing_algorithm)
 
     index_to_remove = list()
-    for index, possible_doublon in enumerate(list_files):
-        if possible_doublon.read_hexhash(HASHING_ALGORITHM) == file_hash:
+    for index, possible_doublon in enumerate(other_files):
+        if possible_doublon.read_hexhash(hashing_algorithm) == file_hash:
             index_to_remove.append(index)
 
-    return remove_doublons(list_files, index_to_remove)
+    return remove_doublons(list_files=other_files,
+                           index_to_remove=index_to_remove,
+                           safe_mode=safe_mode,
+                           check_mode=check_mode,
+                           safe_directory=safe_directory)
