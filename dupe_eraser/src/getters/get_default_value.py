@@ -20,5 +20,9 @@ def verbosity() -> float:
     return _get_value_from_file("verbosity")
 
 
+def hashing_algorithm() -> float:
+    return _get_value_from_file("hashing_algorithm")
+
+
 if __name__ == '__main__':
     pass

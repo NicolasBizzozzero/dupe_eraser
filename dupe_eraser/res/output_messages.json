@@ -1,4 +1,9 @@
 {
-    "deleting_file": "",
-    "moving_file": ""
+    "verbose_welcome_message": "Starting dupe_eraser\n",
+    "verbose_goodbye_message": "Ending dupe_eraser\n",
+    "verbose_parsing_arguments": "Parsing arguments\n",
+    "verbose_cleaning_arguments": "Cleaning arguments\n",
+    "verbose_examining_file": "\n Examining file \"{file}\" :\n",
+    "deleting_file": "Deleting file \"{file}\"\n",
+    "moving_file": "Moving file \"{file}\" into the safe directory\n"
 }

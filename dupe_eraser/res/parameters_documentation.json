@@ -10,6 +10,7 @@
     "safe_directory": "The name of the directory used during safe mode. [default: {default_safe_directory}]",
     "check": "Print the duplicates files if they exist without deleting or moving anything.",
 
-    "verbosity": "Change the output behavior of the software. Values can be `quiet`, `normal` or `verbose`. [default {default_verbosity}]",
-    "low_memory": "The software will try to use the lowest memory quantity that he can."
+    "verbosity": "Change the output behavior of the software. Values can be `quiet`, `normal` or `verbose`. [default: {default_verbosity}]",
+    "low_memory": "The software will try to use the lowest memory quantity that he can.",
+    "hashing_algorithm": "The hashing algorithm used to compare hashes between files. [default: {default_hashing_algorithm}]"
 }

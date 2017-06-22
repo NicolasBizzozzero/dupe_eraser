@@ -4,7 +4,6 @@ and parsing arguments.
 #TODO: We can gain time by not formatting the helping message twice, but by directly formatting the documentation from
 #      the format dictionary
 """
-import dupe_eraser.src.getters.environment as env
 import dupe_eraser.src.getters.get_default_value as gdv
 import dupe_eraser.src.getters.get_global_variable as ggv
 import dupe_eraser.src.getters.get_parameter_documentation as gpd
@@ -24,6 +23,7 @@ _FORMAT_DICTIONARY = dict(
     doc_check=gpd.check(),
     doc_verbosity=gpd.verbosity(),
     doc_low_memory=gpd.low_memory(),
+    doc_hashing_algorithm=gpd.hashing_algorithm(),
 
     # Parameters
     param_help_message=gpn.help_message(),
@@ -34,10 +34,12 @@ _FORMAT_DICTIONARY = dict(
     param_check=gpn.check(),
     param_verbosity=gpn.verbosity(),
     param_low_memory=gpn.low_memory(),
+    param_hashing_algorithm=gpn.hashing_algorithm(),
 
     # Default values
     default_safe_directory=gdv.safe_directory(),
     default_verbosity=gdv.verbosity(),
+    default_hashing_algorithm=gdv.hashing_algorithm(),
 
     # Miscellaneous
     global_name=ggv.name()
@@ -53,21 +55,20 @@ Usage:
   {doc_usage}
 
 Options:
-  {param_help_message}  {doc_help_message}
-  {param_version}  {doc_version}
-  {param_recursive}  {doc_recursive}
-  {param_safe}  {doc_safe}
-  {param_safe_directory}  {doc_safe_directory}
-  {param_check}  {doc_safe}
-  {param_verbosity}  {doc_verbosity}
-  {param_low_memory}  {doc_low_memory}
+  {param_help_message}                 {doc_help_message}
+  {param_version}                 {doc_version}
+  {param_recursive}               {doc_recursive}
+  {param_safe}                    {doc_safe}
+  {param_safe_directory}=DIR      {doc_safe_directory}
+  {param_check}                   {doc_safe}
+  {param_verbosity}=LEVEL         {doc_verbosity}
+  {param_low_memory}              {doc_low_memory}
+  {param_hashing_algorithm}=ALGO  {doc_hashing_algorithm}
 
 """.format(**_FORMAT_DICTIONARY).format(**_FORMAT_DICTIONARY)
 
     arguments = docopt.docopt(documentation, version=ggv.version(), help=True)
     clean_arguments(arguments)
-
-    env.args = arguments
 
 
 if __name__ == "__main__":

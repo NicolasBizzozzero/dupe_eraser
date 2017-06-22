@@ -44,5 +44,9 @@ def low_memory() -> str:
     return _get_name_from_file("low_memory")
 
 
+def hashing_algorithm() -> str:
+    return _get_name_from_file("hashing_algorithm")
+
+
 if __name__ == '__main__':
     pass

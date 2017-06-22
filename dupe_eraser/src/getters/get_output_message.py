@@ -15,6 +15,18 @@ class Verbosity(IntEnum):
     VERBOSE = 2
 
 
+def string_to_verbosity(string: str) -> Verbosity:
+    string = string.lower()
+    if string == "quiet":
+        return Verbosity.QUIET
+    elif string == "normal":
+        return Verbosity.NORMAL
+    elif string == "verbose":
+        return Verbosity.VERBOSE
+    else:
+        raise UnknownVerbosity(string)
+
+
 class UnknownVerbosity(Exception):
     def __init__(self, verbosity):
         Exception.__init__(self, "The verbosity level \"{verbosity}\" is unknown "
@@ -22,23 +34,16 @@ class UnknownVerbosity(Exception):
 
 
 class Message(Enum):
+    # Verbose messages
+    WELCOME_MESSAGE = VERBOSE_KEY_PREFIX + "welcome_message"
+    GOODBYE_MESSAGE = VERBOSE_KEY_PREFIX + "goodbye_message"
+    PARSING_ARGUMENTS = VERBOSE_KEY_PREFIX + "parsing_arguments"
+    CLEANING_ARGUMENTS = VERBOSE_KEY_PREFIX + "cleaning_arguments"
+    EXAMINING_FILE = VERBOSE_KEY_PREFIX + "examining_file"
+
+    # Normal messages
     DELETING_FILE = "deleting_file"
     MOVING_FILE = "moving_file"
-
-    def __str__(self):
-        return _content_if_printable(self.value)
-
-
-def _content_if_printable(message_key: str):
-    if env.verbosity == Verbosity.QUIET:
-        return None
-    elif env.verbosity == Verbosity.NORMAL:
-        if _is_a_normal_message(message_key):
-            return _get_message_from_file(message_key)
-    elif env.verbosity == Verbosity.VERBOSE:
-        return _get_message_from_file(message_key)
-    else:
-        raise UnknownVerbosity(env.verbosity)
 
 
 def _is_a_normal_message(message_key: str) -> bool:
@@ -57,6 +62,20 @@ def _get_message_from_file(value):
 
 
 def vprint(message: Message) -> None:
+    message_key = message.value
+
+    if env.verbosity == Verbosity.QUIET:
+        return None
+    elif env.verbosity == Verbosity.NORMAL:
+        if _is_a_normal_message(message_key):
+            message = _get_message_from_file(message_key)
+        else:
+            message = ""
+    elif env.verbosity == Verbosity.VERBOSE:
+        message = _get_message_from_file(message_key)
+    else:
+        raise UnknownVerbosity(env.verbosity)
+
     print(message, end="", sep="")
 
 

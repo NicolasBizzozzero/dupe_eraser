@@ -9,5 +9,6 @@
     "check": "-c --check",
 
     "verbosity": "-v --verbosity",
-    "low_memory": "-m --low-memory"
+    "low_memory": "-m --low-memory",
+    "hashing_algorithm": "-H --hashing-algorithm"
 }
