@@ -5,7 +5,7 @@ from enum import IntEnum, Enum
 import dupe_eraser.src.getters.environment as env
 
 
-_PATH_OUTPUT_MESSAGES = "../../res/default_values.json"
+_PATH_OUTPUT_MESSAGES = "../../res/output_messages.json"
 VERBOSE_KEY_PREFIX = "verbose_"
 
 
@@ -62,7 +62,7 @@ def _get_message_from_file(value):
         return json.load(file)[value]
 
 
-def vprint(message: Message, *args, **kwargs) -> None:
+def vprint(message: Message, **kwargs) -> None:
     message_key = message.value
 
     if env.verbosity == Verbosity.QUIET:
@@ -77,7 +77,7 @@ def vprint(message: Message, *args, **kwargs) -> None:
     else:
         raise UnknownVerbosity(env.verbosity)
 
-    print(message.format(*kwargs), end="", sep="")
+    print(message.format(**kwargs), end="", sep="")
 
 
 if __name__ == '__main__':
