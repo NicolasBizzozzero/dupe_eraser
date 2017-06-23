@@ -2,12 +2,19 @@ from dupe_eraser.src.core.files_eraser import remove_doublons
 from dupe_eraser.src.getters.get_output_message import vprint, Message
 from path import Path
 from typing import List
+import itertools
 
 
 def erase_doublons(*, main_directory: Path, hashing_algorithm: str, recursive: bool, safe_mode: bool, check_mode: bool,
                    safe_directory: Path) -> None:
     if recursive:
-        files_to_examine = [file for file in main_directory.walkfiles()]
+        files_to_examine = []
+        for directory in main_directory.walkdirs():
+            if directory.name != safe_directory.name:
+                for file in directory.files():
+                    files_to_examine.append(file)
+        for file in main_directory.files():
+            files_to_examine.append(file)
     else:
         files_to_examine = [file for file in main_directory.files()]
 

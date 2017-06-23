@@ -2,6 +2,7 @@ import dupe_eraser.src.getters.get_parameter_name as gpn
 from dupe_eraser.src.getters.get_output_message import string_to_verbosity
 import dupe_eraser.src.getters.environment as env
 from dupe_eraser.src.core.hashing_algorithms import check_hashing_algorithm_supported
+from path import Path
 
 
 class CheckAndSafeOptionsActivated(Exception):
@@ -23,7 +24,7 @@ def clean_arguments(args: dict) -> None:
     env.low_memory = args[_KEY_LOW_MEMORY]
     env.recursive = args[_KEY_RECURSIVE]
     env.safe = args[_KEY_SAFE]
-    env.safe_directory = args[_KEY_SAFE_DIRECTORY]
+    env.safe_directory = Path(args[_KEY_SAFE_DIRECTORY])
     env.verbosity = string_to_verbosity(args[_KEY_VERBOSITY])
     env.hashing_algorithm = args[_KEY_HASHING_ALGORITM]
 

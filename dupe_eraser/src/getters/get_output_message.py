@@ -40,11 +40,21 @@ class Message(Enum):
     PARSING_ARGUMENTS = VERBOSE_KEY_PREFIX + "parsing_arguments"
     CLEANING_ARGUMENTS = VERBOSE_KEY_PREFIX + "cleaning_arguments"
     EXAMINING_FILE = VERBOSE_KEY_PREFIX + "examining_file"
+    VERBOSE_DELETING_FILE = VERBOSE_KEY_PREFIX + "deleting_file"
+    VERBOSE_MOVING_FILE = VERBOSE_KEY_PREFIX + "moving_file"
+    VERBOSE_CHECKING_FILE = VERBOSE_KEY_PREFIX + "checking_file"
 
     # Normal messages
     DELETING_FILE = "deleting_file"
     MOVING_FILE = "moving_file"
     CHECKING_FILE = "checking_file"
+
+    @staticmethod
+    def contains(value):
+        for m in Message:
+            if m.value == value:
+                return True
+        return False
 
 
 def _is_a_normal_message(message_key: str) -> bool:
@@ -73,7 +83,11 @@ def vprint(message: Message, **kwargs) -> None:
         else:
             message = ""
     elif env.verbosity == Verbosity.VERBOSE:
-        message = _get_message_from_file(message_key)
+        # Overwrite the same messages with their verbose version
+        if Message.contains(VERBOSE_KEY_PREFIX + message_key):
+            message = _get_message_from_file(VERBOSE_KEY_PREFIX + message_key)
+        else:
+            message = _get_message_from_file(message_key)
     else:
         raise UnknownVerbosity(env.verbosity)
 

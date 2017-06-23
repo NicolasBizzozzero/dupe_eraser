@@ -10,12 +10,13 @@ def remove_doublons(list_files: List[Path], index_to_remove: List[int], safe_mod
         file = list_files.pop(index)
 
         if safe_mode:
-            vprint(Message.MOVING_FILE, file.realpath())
-            Path.move(file, safe_directory)
+            vprint(Message.MOVING_FILE, file=file.realpath())
+            Path.mkdir_p(Path(safe_directory))
+            Path.move(file, Path(safe_directory))
         elif check_mode:
-            vprint(Message.CHECKING_FILE, file.realpath())
+            vprint(Message.CHECKING_FILE, file=file.realpath())
         else:
-            vprint(Message.DELETING_FILE, file.realpath())
+            vprint(Message.DELETING_FILE, file=file.realpath())
             file.remove()
 
     return list_files

@@ -1,7 +1,7 @@
 {
   "name": "dupe_eraser",
   "description": "Command-line tools to automate the deletion of duplicates files.",
-  "keywords": "Deletion, duplicate, files",
+  "keywords": "Deletion duplicate files command-line",
   "main_homepage": "https://github.com/NicolasBi/dupe_eraser",
   "download_url":"https://github.com/NicolasBi/dupe_eraser/tarball/master",
   "version": "1.0.0",
