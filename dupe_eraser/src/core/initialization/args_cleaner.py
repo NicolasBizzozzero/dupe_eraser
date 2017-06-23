@@ -1,12 +1,19 @@
+""" This module contains all functions related to cleaning command-line arguments parsed by the `docopt` package
+(listed as a dependency). It mainly convert string values to their numeric and enum counterpart. It also checks if some
+of the parameters are invalids and raises exceptions accordingly.
+"""
+
 import dupe_eraser.src.getters.get_parameter_name as gpn
 from dupe_eraser.src.getters.get_output_message import string_to_verbosity
 import dupe_eraser.src.getters.environment as env
 from dupe_eraser.src.core.hashing_algorithms import check_hashing_algorithm_supported
 from path import Path
+import sys
 
 
 class CheckAndSafeOptionsActivated(Exception):
     def __init__(self):
+        sys.tracebacklimit = None
         Exception.__init__(self, "Check mode and Safe mode are incompatibles.")
 
 
@@ -20,6 +27,10 @@ _KEY_HASHING_ALGORITM = gpn.hashing_algorithm().split()[-1]
 
 
 def clean_arguments(args: dict) -> None:
+    """ Clean the command-line arguments parsed by the `docopt` package.
+    It mainly convert string values to their numeric and enum counterpart. It also checks if some of the parameters are
+    invalids and raises exceptions accordingly.
+    """
     env.check = args[_KEY_CHECK]
     env.low_memory = args[_KEY_LOW_MEMORY]
     env.recursive = args[_KEY_RECURSIVE]
@@ -32,3 +43,7 @@ def clean_arguments(args: dict) -> None:
         raise CheckAndSafeOptionsActivated()
 
     check_hashing_algorithm_supported(env.hashing_algorithm)
+
+    #TODO: Implement
+    if env.low_memory:
+        raise NotImplementedError()
