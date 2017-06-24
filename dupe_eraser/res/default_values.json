@@ -1,5 +1,5 @@
 {
     "safe_directory": "_safe_directory",
-    "verbosity": "normal",
+    "verbosity": "progressbar",
     "hashing_algorithm": "sha512"
 }

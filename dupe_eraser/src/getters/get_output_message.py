@@ -13,6 +13,7 @@ class Verbosity(IntEnum):
     QUIET = 0
     NORMAL = 1
     VERBOSE = 2
+    PROGRESS_BAR = 3
 
 
 def string_to_verbosity(string: str) -> Verbosity:
@@ -23,14 +24,17 @@ def string_to_verbosity(string: str) -> Verbosity:
         return Verbosity.NORMAL
     elif string == "verbose":
         return Verbosity.VERBOSE
+    elif string == "progressbar":
+        return Verbosity.PROGRESS_BAR
     else:
         raise UnknownVerbosity(string)
 
 
 class UnknownVerbosity(Exception):
     def __init__(self, verbosity):
-        Exception.__init__(self, "The verbosity level \"{verbosity}\" is unknown "
-                                 "to the software.".format(verbosity=verbosity))
+        Exception.__init__(self, "The verbosity level \"{verbosity}\""
+                                 " is unknown to the "
+                                 "software.".format(verbosity=verbosity))
 
 
 class Message(Enum):
@@ -88,6 +92,8 @@ def vprint(message: Message, **kwargs) -> None:
             message = _get_message_from_file(VERBOSE_KEY_PREFIX + message_key)
         else:
             message = _get_message_from_file(message_key)
+    elif env.verbosity == Verbosity.PROGRESS_BAR:
+        return None
     else:
         raise UnknownVerbosity(env.verbosity)
 

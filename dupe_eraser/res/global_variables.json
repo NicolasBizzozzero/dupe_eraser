@@ -25,7 +25,8 @@
   ],
   "dependencies": [
       "docopt >= 0.6.2",
-      "path.py >= 10.3.1"
+      "path.py >= 10.3.1",
+      "progressbar2 >= 3.30.2"
   ],
 
   "main_entry_point": "dupe_eraser"
