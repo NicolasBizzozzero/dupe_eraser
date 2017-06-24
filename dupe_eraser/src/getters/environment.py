@@ -7,5 +7,3 @@ check = None
 verbosity = None
 low_memory = None
 hashing_algorithm = None
-
-hashes = dict()

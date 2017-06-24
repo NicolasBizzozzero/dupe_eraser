@@ -10,5 +10,9 @@
 
     "deleting_file": "Deleting file : \"{file}\"\n",
     "moving_file": "Moving file : \"{file}\" into the safe directory\n",
-    "checking_file": "Checking file : \"{file}\"\n"
+    "checking_file": "Checking file : \"{file}\"\n",
+
+    "label_storing_files": "Storing files",
+    "label_compute_hashes": "Computing hashes",
+    "label_examining_files": "Examining files"
 }

@@ -7,6 +7,7 @@ import dupe_eraser.src.getters.environment as env
 
 _PATH_OUTPUT_MESSAGES = "../../res/output_messages.json"
 VERBOSE_KEY_PREFIX = "verbose_"
+LABEL_KEY_PREFIX = "label_"
 
 
 class Verbosity(IntEnum):
@@ -53,6 +54,11 @@ class Message(Enum):
     MOVING_FILE = "moving_file"
     CHECKING_FILE = "checking_file"
 
+    # Labels
+    STORING_FILES = LABEL_KEY_PREFIX + "storing_files"
+    COMPUTE_HASHES = LABEL_KEY_PREFIX + "compute_hashes"
+    EXAMINING_FILES = LABEL_KEY_PREFIX + "examining_files"
+
     @staticmethod
     def contains(value):
         for m in Message:
@@ -98,6 +104,14 @@ def vprint(message: Message, **kwargs) -> None:
         raise UnknownVerbosity(env.verbosity)
 
     print(message.format(**kwargs), end="", sep="")
+
+
+def vget(message: Message) -> str:
+    if env.verbosity != Verbosity.PROGRESS_BAR:
+        return ""
+
+    message_key = message.value
+    return _get_message_from_file(message_key)
 
 
 if __name__ == '__main__':
