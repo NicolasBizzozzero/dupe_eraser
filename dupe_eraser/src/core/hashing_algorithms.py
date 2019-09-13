@@ -1,9 +1,14 @@
+import hashlib
 from enum import Enum
+from pathlib import Path
+
+# from dupe_eraser.src.utils import chunks
+from src.utils import chunks
 
 
 class HashingAlgorithmNotSupported(Exception):
     def __init__(self, algorithm: str):
-        Exception.__init__(self, "The hashing algorithm \"{algorithm}\" is currently "
+        Exception.__init__(self, "The hashing algorithm \"{algorithm}\" does not exists or is currently "
                                  "not supported.".format(algorithm=algorithm))
 
 
@@ -33,3 +38,14 @@ def check_hashing_algorithm_supported(algorithm: str) -> None:
     algorithm = algorithm.lower()
     if not HashingAlgorithm(algorithm):
         raise HashingAlgorithmNotSupported(algorithm)
+
+
+def compute_hash(file: Path, hashing_algorithm: str) -> str:
+    m = hashlib.new(hashing_algorithm)
+    for chunk in chunks(file, chunk_size=8192):
+        m.update(chunk)
+    return m.hexdigest()
+
+
+if __name__ == "__main__":
+    pass

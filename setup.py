@@ -78,7 +78,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            ggv.main_entry_point() + ' = dupe_eraser.main:main_entry_point',
+            'dupe_eraser = dupe_eraser.main:main',
         ],
     },
 )

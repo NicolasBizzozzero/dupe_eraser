@@ -1,136 +1,97 @@
-from dupe_eraser.src.core.files_eraser import remove_doublons
-from dupe_eraser.src.getters.get_output_message import vprint, Message, vget
-from path import Path
+# from dupe_eraser.src.core.files_eraser import remove_doublons
+import os
+import sys
+import shutil
+
+from pathlib import Path
 from typing import List, Dict
-import progressbar
+
+from tqdm import tqdm
+
+# from dupe_eraser.src.core.hashing_algorithms import compute_hash
+from src.core.hashing_algorithms import compute_hash
+
+_FORMAT_PROGRESS_BAR_HASHES = r"Hashing: {n_fmt}/{total_fmt} files, elapsed:{elapsed}, ETA:{remaining}{postfix}"
+_FORMAT_PROGRESS_BAR_FINDING = r"Looking for dupe: {n_fmt}/{total_fmt} files, elapsed:{elapsed}, ETA:{remaining}{postfix}"
 
 
-def dupe_eraser(*, main_directory: Path, hashing_algorithm: str,
-                recursive: bool, safe_mode: bool, check_mode: bool,
-                safe_directory: Path, progress_bar: bool) -> None:
-    if progress_bar:
-        files_to_examine = _get_files_to_examine_pb(main_directory, recursive, safe_directory)
-        hashes = _computing_hashes_pb(files_to_examine, hashing_algorithm)
-        _init_finding_pb(files_to_examine, hashes, safe_mode, check_mode, safe_directory)
-    else:
-        files_to_examine = _get_files_to_examine(main_directory, recursive, safe_directory)
-        hashes = _computing_hashes(files_to_examine, hashing_algorithm)
-        _init_finding(files_to_examine, hashes, safe_mode, check_mode, safe_directory)
-
-
-def _get_files_to_examine(main_directory: Path, recursive: bool, safe_directory: Path) -> List[Path]:
+def get_files_to_examine(path_dir: Path, recursive: bool, safe_directory: Path) -> List[Path]:
     if recursive:
-        files_to_examine = []
-        for directory in main_directory.walkdirs():
-            if directory.name != safe_directory.name:
-                for file in directory.files():
-                    files_to_examine.append(file)
-        for file in main_directory.files():
-            files_to_examine.append(file)
-        return files_to_examine
+        return [path for path in Path(path_dir).rglob("*") if (path.is_file() and path != safe_directory)]
     else:
-        return [file for file in main_directory.files()]
+        return [path for path in path_dir.iterdir() if path.is_file()]
 
 
-def _get_files_to_examine_pb(main_directory: Path, recursive: bool, safe_directory: Path) -> List[Path]:
-    widgets = [progressbar.FormatLabel(vget(Message.STORING_FILES)), ' ',
-               progressbar.Percentage(), ' ',
-               progressbar.Bar('='), ' ',
-               progressbar.ETA()]
-
-    if recursive:
-        currentval = 0
-        bar = progressbar.ProgressBar(widgets=widgets, maxval=progressbar.UnknownLength).start()
-        files_to_examine = []
-        for directory in main_directory.walkdirs():
-            if directory.name != safe_directory.name:
-                for file in directory.files():
-                    files_to_examine.append(file)
-                    currentval += 1
-                    bar.update(currentval)
-        for file in main_directory.files():
-            files_to_examine.append(file)
-            currentval += 1
-            bar.update(currentval)
-        bar.finish()
-        return files_to_examine
-    else:
-        maxval = len(main_directory.files())
-        bar = progressbar.ProgressBar(widgets=widgets, maxval=maxval)
-        files_to_examine = [file for file in bar(main_directory.files())]
-        return files_to_examine
-
-
-def _computing_hashes(files_to_examine: List[Path], hashing_algorithm: str) -> Dict[Path, str]:
+def computing_hashes(files_to_examine: List[Path], hashing_algorithm: str,
+                     disable_progress_bar: bool) -> Dict[str, str]:
     hashes = dict()
-    for file in files_to_examine:
-        hashes[file] = file.read_hexhash(hashing_algorithm)
+    with tqdm(bar_format=_FORMAT_PROGRESS_BAR_HASHES, total=len(files_to_examine),
+              file=open(os.devnull, 'w') if disable_progress_bar else sys.stderr) as progress_bar:
+        for file in files_to_examine:
+            hashes[file.as_posix()] = compute_hash(file, hashing_algorithm)
+            progress_bar.update()
     return hashes
 
 
-def _computing_hashes_pb(files_to_examine: List[Path], hashing_algorithm: str) -> Dict[Path, str]:
-    widgets = [progressbar.FormatLabel(vget(Message.COMPUTE_HASHES)), ' ',
-               progressbar.Percentage(), ' ',
-               progressbar.Bar('='), ' ',
-               progressbar.ETA()]
-    maxval = len(files_to_examine)
-    bar = progressbar.ProgressBar(widgets=widgets, maxval=maxval)
+def look_for_dupe(files_to_examine: List[str], hashes: Dict[str, str], behavior: str, safe_directory: Path,
+                  disable_progress_bar: bool) -> None:
+    n_of_files = len(files_to_examine)
 
-    hashes = dict()
-    for file in bar(files_to_examine):
-        hashes[file] = file.read_hexhash(hashing_algorithm)
-    return hashes
-
-
-def _init_finding(files_to_examine: List[Path], hashes: Dict[Path, str],
-                  safe_mode: bool, check_mode: bool,
-                  safe_directory: Path) -> None:
-
-    while files_to_examine:
-        file = files_to_examine.pop(0)
-        vprint(Message.EXAMINING_FILE, file=file.realpath())
-        files_to_examine = _find_doublons(original_file=file,
-                                          other_files=files_to_examine,
-                                          hashes=hashes,
-                                          safe_mode=safe_mode,
-                                          check_mode=check_mode,
-                                          safe_directory=safe_directory)
+    with tqdm(bar_format=_FORMAT_PROGRESS_BAR_FINDING, total=n_of_files,
+              file=open(os.devnull, 'w') if disable_progress_bar else sys.stderr) as progress_bar:
+        while len(files_to_examine) != 0:
+            file = files_to_examine.pop(0).as_posix()
+            n_files_removed = _find_doublons(original_file=file,
+                                             other_files=files_to_examine,
+                                             hashes=hashes,
+                                             behavior=behavior,
+                                             safe_directory=safe_directory)
+            progress_bar.update(n_files_removed + 1)
+    progress_bar.fp.close()
 
 
-def _init_finding_pb(files_to_examine: List[Path], hashes: Dict[Path, str],
-                               safe_mode: bool, check_mode: bool,
-                               safe_directory: Path) -> None:
-    widgets = [progressbar.FormatLabel(vget(Message.EXAMINING_FILES)), ' ',
-               progressbar.Percentage(), ' ',
-               progressbar.Bar('='), ' ',
-               progressbar.ETA()]
-
-    maxval = len(files_to_examine)
-    bar = progressbar.ProgressBar(widgets=widgets, maxval=maxval).start()
-    while files_to_examine:
-        file = files_to_examine.pop(0)
-        vprint(Message.EXAMINING_FILE, file=file.realpath())
-        files_to_examine = _find_doublons(original_file=file,
-                                          other_files=files_to_examine,
-                                          hashes=hashes,
-                                          safe_mode=safe_mode,
-                                          check_mode=check_mode,
-                                          safe_directory=safe_directory)
-        bar.update(maxval - len(files_to_examine))
-    bar.finish()
-
-
-def _find_doublons(original_file: Path, other_files: List[Path],
-                   hashes: Dict[Path, str], safe_mode: bool, check_mode: bool,
-                   safe_directory: Path) -> List[Path]:
+def _find_doublons(original_file: str, other_files: List[str],
+                   hashes: Dict[str, str], behavior: str, safe_directory: Path) -> List[str]:
     file_hash = hashes[original_file]
     index_to_remove = list()
     for index, possible_doublon in enumerate(other_files):
-        if hashes[possible_doublon] == file_hash:
+        if hashes[possible_doublon.as_posix()] == file_hash:
             index_to_remove.append(index)
 
-    return remove_doublons(list_files=other_files,
-                           index_to_remove=index_to_remove,
-                           safe_mode=safe_mode,
-                           check_mode=check_mode,
-                           safe_directory=safe_directory)
+    n_files_removed = len(index_to_remove)
+    _remove_doublons(list_files=other_files,
+                     index_to_remove=index_to_remove,
+                     behavior=behavior,
+                     safe_directory=safe_directory)
+    return n_files_removed
+
+
+def _remove_doublons(list_files: List[str], index_to_remove: List[int],
+                     behavior: str, safe_directory: Path) -> List[str]:
+    # If we remove indexes from the highest to the lowest, we don't have to
+    # increment each index at each removal
+    for index in reversed(index_to_remove):
+        file = list_files.pop(index)
+
+        if behavior == "s":
+            tqdm.write("Moving file : \"{file}\" into the safe directory".format(file=file))
+            os.makedirs(safe_directory.absolute().as_posix(), exist_ok=True)
+            while True:
+                try:
+                    shutil.copy(file, os.path.join(safe_directory.absolute().as_posix()))
+                    os.remove(file)
+                    break
+                except shutil.Error:
+                    file = Path(file.parent) / Path(file).stemad + "_copy" + Path(file).suffix
+        elif behavior == "c":
+            tqdm.write("File : \"{file}\" is a duplicate".format(file=file))
+        elif behavior == "d":
+            tqdm.write("Deleting file : \"{file}\"".format(file=file))
+            Path(file).unlink()
+        else:
+            print("Unknown behavior :", behavior, file=sys.stderr)
+            exit(2)
+
+
+if __name__ == "__main__":
+    pass
