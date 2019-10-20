@@ -10,7 +10,6 @@ from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
 from os import path
-import dupe_eraser.src.getters.get_global_variable as ggv
 
 here = path.abspath(path.dirname(__file__))
 
@@ -68,7 +67,11 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=[],
+    install_requires=[
+        "tqdm >= 4.36.1",
+        "numpy >= 1.17.2",
+        "scikit-image >= 0.16.1",
+    ],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
