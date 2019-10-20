@@ -19,34 +19,42 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as file:
     long_description = file.read()
 
 setup(
-    name=ggv.name(),
+    name="dupe_eraser",
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=ggv.version(),
+    version="1.0.0",
 
-    description=ggv.description(),
+    description="Command-line tools to automate the deletion of duplicates files.",
     long_description=long_description,
 
     # The project's main homepage.
-    url=ggv.main_homepage(),
+    url="https://github.com/NicolasBizzozzero/dupe_eraser",
 
     # Not to use with Python versions prior to 2.2.3 or 2.3
-    download_url=ggv.download_url(),
+    download_url="https://github.com/NicolasBizzozzero/dupe_eraser/tarball/master",
 
     # Author details
-    author=ggv.author(),
-    author_email=ggv.email(),
+    author="Nicolas Bizzozzero",
+    author_email="nicolas.bizzozzero@protonmail.com",
 
     # Choose your license
-    license=ggv.license_used(),
+    license="GPL-3.0",
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    classifiers=ggv.classifiers(),
+    classifiers=[
+      "Development Status :: 5 - Production/Stable",
+      "Environment :: Console",
+      "Intended Audience :: End Users/Desktop",
+      "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+      "Natural Language :: English",
+      "Programming Language :: Python :: 3.5",
+      "Topic :: Desktop Environment :: File Managers"
+  ],
 
     # What does your project relate to?
-    keywords=ggv.keywords(),
+    keywords=["deletion", "duplicate", "files", "command-line", "cli"],
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -60,7 +68,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=ggv.dependencies(),
+    install_requires=[],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
@@ -78,7 +86,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'dupe_eraser = dupe_eraser.main:main',
+            'dupe_eraser = dupe_eraser.__main__:main',
         ],
     },
 )
