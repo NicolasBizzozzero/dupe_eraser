@@ -1,6 +1,1 @@
 include README.md
-include dupe_eraser/res/default_values.json
-include dupe_eraser/res/parameters_names.json
-include dupe_eraser/res/global_variables.json
-include dupe_eraser/res/parameters_documentation.json
-include dupe_eraser/res/output_messages.json
